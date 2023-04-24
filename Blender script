@@ -1,0 +1,43 @@
+import mathutils
+import serial
+ 
+qw = 0.0
+qx = 0.0
+qy = 0.0
+qz = 0.0
+ 
+arduino = serial.Serial()
+arduino.baudrate = 115200
+arduino.port = '/dev/ttyUSB0'
+ 
+def Port():
+    global qw, qx, qy, qz
+    global arduino
+    data = arduino.readline().strip()
+    quat = data.decode('ascii').split(',')
+    qw, qx, qy, qz = [float(s) for s in quat]
+    print(qw)
+    print(qx)
+    print(qy)
+    print(qz)
+ 
+def Cube():
+    global qw, qx, qy, qz
+    scene = bge.logic.getCurrentScene()
+    cont = bge.logic.getCurrentController()
+    obj = cont.owner
+    obj['qw'] = qw
+    obj['qx'] = qx
+    obj['qy'] = qy
+    obj['qz'] = qz
+    quat_cube = mathutils.Quaternion((obj['qw'], obj['qx'], obj['qy'], obj['qz'])) 
+    quat_cube.normalize()
+    obj.localOrientation = quat_cube()
+ 
+def Close():
+    global arduino
+    arduino.close()
+ 
+def Start():
+    global arduino
+    arduino.open()
