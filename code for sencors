@@ -1,0 +1,62 @@
+//следующий пример кода для подключения датчика положения в пространстве MPU-9250 к Arduino:
+
+#include <Wire.h>
+#include <MPU9250.h>
+
+MPU9250 mpu;
+
+void setup() {
+  Wire.begin();  
+  Serial.begin(9600);
+  while(!Serial) {}
+
+  // Подключение к датчику
+  if(!mpu.begin()) {
+    Serial.println("Ошибка подключения к MPU-9250");
+    while(1);
+  }
+
+  // Включение гироскопа, акселерометра и магнетометра
+  mpu.enableGyro();
+  mpu.enableAccelerometer();
+  mpu.enableMagnetometer();
+}
+
+void loop() {
+  // Получение данных о положении в пространстве
+  if(mpu.readSensor() == 0) {
+    // Получение угловой скорости (deg/sec)
+    Serial.print("Gyro (deg/sec) - ");
+    Serial.print("X: ");
+    Serial.print(mpu.getGyroX());
+    Serial.print(" Y: ");
+    Serial.print(mpu.getGyroY());
+    Serial.print(" Z: ");
+    Serial.print(mpu.getGyroZ());
+    Serial.println();
+
+    // Получение ускорения (G)
+    Serial.print("Accelerometer (G) - ");
+    Serial.print("X: ");
+    Serial.print(mpu.getAccelX());
+    Serial.print(" Y: ");
+    Serial.print(mpu.getAccelY());
+    Serial.print(" Z: ");
+    Serial.print(mpu.getAccelZ());
+    Serial.println();
+
+    // Получение магнитного поля (uT)
+    Serial.print("Magnetometer (uT) - ");
+    Serial.print("X: ");
+    Serial.print(mpu.getMagX());
+    Serial.print(" Y: ");
+    Serial.print(mpu.getMagY());
+    Serial.print(" Z: ");
+    Serial.print(mpu.getMagZ());
+    Serial.println();
+  }
+  delay(500);
+}
+
+
+//Примечание: перед запуском кода необходимо установить библиотеку MPU9250.
