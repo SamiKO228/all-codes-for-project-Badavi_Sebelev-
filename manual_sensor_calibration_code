@@ -1,0 +1,31 @@
+//Для калибровки датчика MPU-9250 вам понадобится использовать Arduino IDE и библиотеку для работы с датчиком.
+
+#include <Wire.h>
+#include <MPU9250.h>
+
+MPU9250 IMU;
+
+int status;
+
+void setup() {
+  Serial.begin(9600);
+
+  Wire.begin();
+  status = IMU.begin();
+
+  if (status < 0) {
+    Serial.println("Failed to initialize MPU-9250.");
+    while (1) {}
+  }
+
+  IMU.calibrateGyro();
+  IMU.calibrateAccel();
+
+  Serial.println("Calibration complete.");
+
+  while (1) {}
+}
+
+void loop() {}
+
+//Перед запуском кода убедитесь, что вы установили библиотеку MPU9250 и правильно подключили датчик к плате Arduino.
